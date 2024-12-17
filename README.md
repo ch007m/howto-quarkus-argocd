@@ -23,7 +23,10 @@ metadata:
 ```
 - Create a new kind cluster using idpbuilder and set the path of the ConfigMap file using the flag `-c`
 ```bash
-idpbuilder create --color --name quarkus -c argocd:<PROJECT_PATH>/argocd-cm.yaml
+idpbuilder create \
+  --color \
+  --name quarkus \
+  -c argocd:<PROJECT_PATH>/argocd-cm.yaml
 ```
 - Generate a `Quarkus Hello` project and add the needed extensions
 ```bash
