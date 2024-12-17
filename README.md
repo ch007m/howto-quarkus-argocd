@@ -58,7 +58,37 @@ REGISTRY_PASSWORD=<REGISTRY_PASSWORD> // Use idpbuilder get secrets gitea comman
 GITEA_TOKEN=<GITEA_TOKEN> // Use idpbuilder get secrets gitea command to got it
 HELM_PROJECT_PATH=<HELM_PROJECT_PATH>
 ```
-- Create a new gitea organization `quarkus` and repository `my-quarkus-hello` on `https://gitea.cnoe.localtest.me:8443/
+- Create a new gitea organization `quarkus` and repository `my-quarkus-hello` on `https://gitea.cnoe.localtest.me:8443/`
+```bash
+curl -k -X POST \
+  "https://gitea.cnoe.localtest.me:8443/api/v1/orgs" \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -u "$REGISTRY_USERNAME:$REGISTRY_PASSWORD" \
+  -d '{"username": "quarkus"}'
+
+curl -kv \
+  "https://gitea.cnoe.localtest.me:8443/api/v1/orgs/quarkus1/repos" \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -u "$REGISTRY_USERNAME:$REGISTRY_PASSWORD" \
+  -d '{
+     "auto_init": true,
+     "default_branch": "main",
+     "description": "my-quarkus-hello",
+     "name": "my-quarkus-hello",
+     "readme": "Default",
+     "private": true
+}'  
+```
+**Trick**: To delete the repository
+```bash
+curl -k -X 'DELETE' \
+  "https://gitea.cnoe.localtest.me:8443/api/v1/repos/quarkus/my-quarkus-hello" \
+  -u "$REGISTRY_USERNAME:$REGISTRY_PASSWORD" \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json'
+```
 - Add your project to the git repository (e.g.: gitea.cnoe.localtest.me:8443, etc.)
 ```bash
 git init
