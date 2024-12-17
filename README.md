@@ -115,16 +115,41 @@ quarkus build \
   -Dquarkus.container-image.insecure=true \
   -Dquarkus.podman.tls-verify=false
 ```
+- Create a namespace for the user to be tested
+```bash
+kubectl create ns user1
+```
 - Populate the helm chart like the argocd resources at the root of the project
 ```bash
 mvn clean package \
   -Dquarkus.helm.output-directory=$HELM_PROJECT_PATH \
-  -Dquarkus.container-image.image=gitea.cnoe.localtest.me:8443/quarkus/my-quarkus-hello
+  -Dquarkus.container-image.image=gitea.cnoe.localtest.me:8443/quarkus/my-quarkus-hello \
+  -Dquarkus.kubernetes.namespace=user1 \
+  -Dquarkus.argocd.namespace=user1
 ```
-- Create a namespace for the user like `user1` and deploy the argocd resources
+**Important**: As we are deploying the Argocd application in a namespace not managed by an `AppProject` created under `argocd` namespace, then argocd will not been able to deploy the `my-quarkus-hello` application. See the issue here: https://github.com/argoproj/argo-cd/issues/21150 and trick hereafter
 ```bash
-kubectl create ns user1
+echo "apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: my-quarkus-hello
+  namespace: argocd
+spec:
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  destinations:
+    - namespace: '*'
+      server: '*'
+  sourceRepos:
+    - '*'
+  sourceNamespaces:
+    - '*'" | kubectl apply -f -
+```
+- Deploy the argocd resources
+```bash
 kubectl -n user1 apply -f .argocd
+kubectl -n user1 delete -f .argocd
 ```
  
 
