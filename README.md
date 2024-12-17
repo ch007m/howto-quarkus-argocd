@@ -67,8 +67,8 @@ curl -k -X POST \
   -u "$REGISTRY_USERNAME:$REGISTRY_PASSWORD" \
   -d '{"username": "quarkus"}'
 
-curl -kv \
-  "https://gitea.cnoe.localtest.me:8443/api/v1/orgs/quarkus1/repos" \
+curl -k \
+  "https://gitea.cnoe.localtest.me:8443/api/v1/orgs/quarkus/repos" \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -u "$REGISTRY_USERNAME:$REGISTRY_PASSWORD" \
