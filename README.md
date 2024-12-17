@@ -1,5 +1,23 @@
 ## A quarkus hello deployed on kubernetes using argocd
 
+- As we will deploy the Argocd applications using different namespaces, then create the following Argocd ConfigMap file
+```bash
+echo "apiVersion: v1
+data:
+  application.namespaces: user1,user2,user3,user4,user5
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/name: argocd-cmd-params-cm
+    app.kubernetes.io/part-of: argocd
+  name: argocd-cmd-params-cm
+  namespace: argocd
+" > argocd-cm.yaml
+```
+- Create a new kind cluster using idpbuilder and pass the path of the ConfigMap file using the flag `-c`
+```bash
+idpbuilder create --color --name quarkus -c argocd:<PROJECT_PATH>/argocd-cm.yaml
+```
 - Generate a `Quarkus Hello` project and add the needed extensions
 ```bash
 rm -rf my-quarkus-hello
@@ -19,11 +37,15 @@ cd my-quarkus-hello
     <version>0.1.0</version>
 </dependency> 
 ```
+- Get the credentials to access the argocd and gitea servers.
+```
+idpbuilder get secrets
+```
 - Create a `.env`, set the following variables and source it
 ```bash
-REGISTRY_USERNAME=<REGISTRY_USERNAME>
-REGISTRY_PASSWORD=<REGISTRY_PASSWORD>
-GITEA_TOKEN=<GITEA_TOKEN>
+REGISTRY_USERNAME=<REGISTRY_USERNAME> // giteaAdmin
+REGISTRY_PASSWORD=<REGISTRY_PASSWORD> // Use idpbuilder get secrets gitea command to got it
+GITEA_TOKEN=<GITEA_TOKEN> // Use idpbuilder get secrets gitea command to got it
 HELM_PROJECT_PATH=<HELM_PROJECT_PATH>
 ```
 - Add your project to a git repository (e.g.: gitea.cnoe.localtest.me:8443, etc.)
