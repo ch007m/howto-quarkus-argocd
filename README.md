@@ -1,4 +1,11 @@
-## A quarkus hello deployed on kubernetes using argocd
+# A quarkus hello deployed on kubernetes using argocd
+
+## Prerequisites
+
+- kubectl, [podman](https://podman.io/docs/installation) & [idpbuilder](https://github.com/cnoe-io/idpbuilder?tab=readme-ov-file#getting-started)
+- Quarkus [client](https://quarkus.io/get-started/)
+
+## Instructions
 
 - As we will deploy the Argocd applications using different namespaces, then create the following Argocd ConfigMap file
 ```bash
@@ -14,7 +21,7 @@ metadata:
   namespace: argocd
 " > argocd-cm.yaml
 ```
-- Create a new kind cluster using idpbuilder and pass the path of the ConfigMap file using the flag `-c`
+- Create a new kind cluster using idpbuilder and set the path of the ConfigMap file using the flag `-c`
 ```bash
 idpbuilder create --color --name quarkus -c argocd:<PROJECT_PATH>/argocd-cm.yaml
 ```
@@ -48,7 +55,8 @@ REGISTRY_PASSWORD=<REGISTRY_PASSWORD> // Use idpbuilder get secrets gitea comman
 GITEA_TOKEN=<GITEA_TOKEN> // Use idpbuilder get secrets gitea command to got it
 HELM_PROJECT_PATH=<HELM_PROJECT_PATH>
 ```
-- Add your project to a git repository (e.g.: gitea.cnoe.localtest.me:8443, etc.)
+- Create a new gitea organization `quarkus` and repository `my-quarkus-hello` on `https://gitea.cnoe.localtest.me:8443/
+- Add your project to the git repository (e.g.: gitea.cnoe.localtest.me:8443, etc.)
 ```bash
 git init
 git add .
