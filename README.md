@@ -1,4 +1,6 @@
-# A quarkus hello deployed on kubernetes using argocd
+# Quarkus & Argo CD
+
+How to guide explaining how to create a Quarkus application and to deploy it using the GitOps Argo CD way on a cluster using an idpbuilder platform.
 
 ## Prerequisites
 
@@ -7,7 +9,7 @@
 
 ## Instructions
 
-- As we will deploy the Argocd applications using different namespaces, then create the following Argocd ConfigMap file
+- As we will deploy our Argocd application in [any namespaces](https://argo-cd.readthedocs.io/en/stable/operator-manual/app-any-namespace/), then create the following Argocd ConfigMap file to list the `any` namespaces
 ```bash
 echo "apiVersion: v1
 data:
