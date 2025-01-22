@@ -16,7 +16,7 @@ kubectl wait --for=condition=Ready deployment/argocd-server -n argocd --timeout=
 kubectl patch configmap argocd-cmd-params-cm \
   -n argocd \
   --type merge \
-  -p '{"data":{"server.insecure":"true"}}'
+  -p '{"data":{"server.insecure":"true","application.namespaces":"test3"}}'
 
 kubectl rollout restart -n argocd deployment argocd-server
 kubectl apply -f $(pwd)/test/argocd-ingress.yaml

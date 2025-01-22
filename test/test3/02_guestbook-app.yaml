@@ -1,0 +1,32 @@
+#
+# Use case: default appproject with full rights (this appproject is created OOTB by the Argo CD controller)
+# AppProject namespace: argocd control plane's namespace
+# Destination: default namespace
+#
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: guestbook-test3
+  namespace: test3
+spec:
+  destination:
+    namespace: test3
+    server: https://kubernetes.default.svc
+  project: guestbook-test3
+  source:
+    path: guestbook
+    repoURL: https://github.com/argoproj/argocd-example-apps.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    retry:
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 10m
+    syncOptions:
+      - CreateNamespace=true
+      - RespectIgnoreDifferences=true
+      - ApplyOutOfSyncOnly=true
