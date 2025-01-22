@@ -20,6 +20,7 @@ kubectl patch configmap argocd-cmd-params-cm \
 
 kubectl rollout restart -n argocd deployment argocd-server
 kubectl apply -f $(pwd)/test/argocd-ingress.yaml
+sleep 20
 
 ARGOCD_ADMIN_PASSWORD=$(kubectl get secret/argocd-initial-admin-secret -n argocd -ojson | jq -r '.data.password' | base64 -d)
 echo "Argocd password: $ARGOCD_ADMIN_PASSWORD"
