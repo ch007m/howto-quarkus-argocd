@@ -18,9 +18,10 @@ kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/st
 kubectl patch configmap argocd-cmd-params-cm \
   -n argocd \
   --type merge \
-  -p '{"data":{"server.insecure":"true"}}'
+  -p '{"data":{"server.insecure":"true","application.namespaces":"test3"}}'
 
-kubectl rollout restart -n argocd deployment argocd-server  
+kubectl rollout restart -n argocd deployment argocd-server
+kubectl apply -f argocd-ingress.yaml
 ```
 - Get the argocd initial password: `kubectl get secret/argocd-initial-admin-secret -n argocd -ojson | jq -r '.data.password' | base64 -d`
 - Login to the server `https://argocd.localtest.me` using as with username: `admin` and password or use the argocd CLI
