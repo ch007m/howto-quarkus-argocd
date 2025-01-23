@@ -12,10 +12,6 @@ kubectl create namespace argocd
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 kubectl wait --for=condition=Ready deployment/argocd-server -n argocd --timeout=90s
 
-kubectl create ns test1
-kubectl create ns test2
-kubectl create ns test3
-
 # See discussion about why we got HTTP 30x error and workaround
 # https://github.com/argoproj/argo-cd/issues/2953
 kubectl patch configmap argocd-cmd-params-cm \
@@ -24,7 +20,7 @@ kubectl patch configmap argocd-cmd-params-cm \
   -p '{"data":{"server.insecure":"true","application.namespaces":"test3"}}'
 
 kubectl rollout restart -n argocd deployment argocd-server
-kubectl rollout restart -n argocd deployment argocd-applicationset-controller
+kubectl rollout restart -n argocd statefulset argocd-applicationset-controller
 
 kubectl apply -f $(pwd)/test/argocd-ingress.yaml
 

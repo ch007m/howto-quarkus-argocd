@@ -1,8 +1,3 @@
-#
-# Use case: default appproject with full rights (this appproject is created OOTB by the Argo CD controller)
-# AppProject namespace: argocd control plane's namespace
-# Destination: default namespace
-#
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:

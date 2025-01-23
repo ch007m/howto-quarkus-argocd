@@ -6,6 +6,10 @@ argocd login argocd.localtest.me --grpc-web --insecure --username admin --passwo
 kubectl delete appprojects --all -A
 kubectl delete applications --all -A
 
+kubectl create ns test1
+kubectl create ns test2
+kubectl create ns test3
+
 kubectl apply -f $(pwd)/test/test1/01_default-project.yaml
 sleep 10
 kubectl apply -f $(pwd)/test/test1/02_guestbook-app.yaml
