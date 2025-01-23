@@ -15,7 +15,7 @@ while true; do
     echo "## Use \"default\" AppProject of argocd control plane's namespace."
     echo "## Application deployed under argocd control plane's namespace."
     echo "##"
-    echo "## Succeeded: status is synced"
+    echo "## Test 1 succeeded: status is synced"
     echo "##"
     kubectl get appproject/default -n argocd -oyaml
     echo "##"    
@@ -40,7 +40,7 @@ while true; do
     echo "## Use \"guestbook\" AppProject deployed under argocd control plane's namespace: argocd."
     echo "## Application deployed under argocd control plane's namespace"
     echo "##"    
-    echo "## Succeeded: status is synced"
+    echo "## Test2 succeeded: status is synced"
     echo "##" 
     kubectl get appproject/guestbook-test2 -n argocd -oyaml
     echo "##" 
@@ -65,7 +65,7 @@ while true; do
     echo "## Use \"guestbook\" AppProject deployed under argocd control plane's namespace: argocd."
     echo "## Application deployed under a user's namespace: test3"
     echo "##"
-    echo "## Succeeded: status is synced"
+    echo "## Test 3 succeeded: status is synced"
     echo "##"
     kubectl get appproject/guestbook -n argocd -oyaml
     echo "##"
