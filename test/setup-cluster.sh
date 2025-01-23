@@ -20,7 +20,7 @@ kubectl patch configmap argocd-cmd-params-cm \
   -p '{"data":{"server.insecure":"true","application.namespaces":"test3"}}'
 
 kubectl rollout restart -n argocd deployment argocd-server
-kubectl rollout restart -n argocd statefulset argocd-applicationset-controller
+kubectl rollout restart -n argocd statefulset argocd-application-controller
 
 kubectl apply -f $(pwd)/test/argocd-ingress.yaml
 
