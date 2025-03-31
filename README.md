@@ -27,9 +27,9 @@ Generate now a `Quarkus Hello` project and include the extensions: helm, contain
 rm -rf my-quarkus-hello
 quarkus create app \
   --name my-quarkus-hello \
-  --wrapper \
+  --code --wrapper \
   dev.snowdrop:my-quarkus-hello:0.1.0 \
-  -x helm,container-image-podman
+  -x helm,container-image-podman,resteasy
   
 cd my-quarkus-hello
 ```
