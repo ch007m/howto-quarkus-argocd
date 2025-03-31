@@ -19,58 +19,6 @@ idpbuilder create \
   --dev-password \
   --name quarkus
 ```
-### Configure Argocd in any namespaces (optional)
-
-This step is optional except if you would like to deploy the Argo CD Application resource in [any namespaces](https://argo-cd.readthedocs.io/en/stable/operator-manual/app-any-namespace/). By default, the Argocd controller watches for resources deployed under the control's plane namespace: argocd
-
-To support this feature, add the following property `application.namespaces` to the Argo CD ConfigMap `argocd-cmd-params-cm` and list the namespaces that you would like to watch
-```bash
-echo "apiVersion: v1
-data:
-  application.namespaces: user1,user2,user3,user4,user5
-kind: ConfigMap
-metadata:
-  labels:
-    app.kubernetes.io/name: argocd-cmd-params-cm
-    app.kubernetes.io/part-of: argocd
-  name: argocd-cmd-params-cm
-  namespace: argocd
-" > argocd-cm.yaml
-```
-
-TODO: Review the following section
-**Important**: As we are deploying the Argocd application in a namespace not managed by an `AppProject` created under `argocd` namespace, then argocd will not been able to deploy the `my-quarkus-hello` application. See the issue here: https://github.com/argoproj/argo-cd/issues/21150 and trick hereafter
-```bash
-echo "apiVersion: argoproj.io/v1alpha1
-kind: AppProject
-metadata:
-  name: my-quarkus-hello
-  namespace: argocd
-spec:
-  clusterResourceWhitelist:
-    - group: '*'
-      kind: '*'
-  destinations:
-    - namespace: '*'
-      server: '*'
-  sourceRepos:
-    - '*'
-  sourceNamespaces:
-    - '*'" | kubectl apply -f -
-```
-
-Create a kind cluster using the tool [idpbuilder](https://cnoe.io/docs/intro/idpbuilder) and set the path to the Argo CD ConfigMap file you created using the flag `-c`
-```bash
-idpbuilder create \
-  --color \
-  --name quarkus \
-  -c argocd:<PROJECT_PATH>/argocd-cm.yaml
-```
-- It could be needed to roll out the Argo CD pods to take care of the ConfigMap change
-```bash
-kubectl rollout restart -n argocd deployment argocd-server
-kubectl rollout restart -n argocd statefulset argocd-application-controller 
-```
 
 ### Create a Quarkus Hello world project and deploy it
 
@@ -222,5 +170,59 @@ __  ____  __  _____   ___  __ ____  ______
 2025-01-21 13:39:50,888 INFO  [io.quarkus] (main) my-quarkus-hello 0.1.0 on JVM (powered by Quarkus 3.17.7) started in 0.268s.
 2025-01-21 13:39:50,888 INFO  [io.quarkus] (main) Profile prod activated.
 2025-01-21 13:39:50,889 INFO  [io.quarkus] (main) Installed features: [argocd, cdi, kubernetes, smallrye-context-propagation, vertx]
+```
+
+### Configure Argocd in any namespaces (optional)
+
+This step is optional except if you would like to deploy the Argo CD Application resource in [any namespaces](https://argo-cd.readthedocs.io/en/stable/operator-manual/app-any-namespace/). By default, the Argocd controller watches for resources deployed under the control's plane namespace: argocd
+
+To support this feature, add the following property `application.namespaces` to the Argo CD ConfigMap `argocd-cmd-params-cm` and list the namespaces that you would like to watch
+```bash
+echo "apiVersion: v1
+data:
+  application.namespaces: user1,user2,user3,user4,user5
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/name: argocd-cmd-params-cm
+    app.kubernetes.io/part-of: argocd
+  name: argocd-cmd-params-cm
+  namespace: argocd
+" > argocd-cm.yaml
+```
+
+TODO: Review the following section
+**Important**: As we are deploying the Argocd application in a namespace not managed by an `AppProject` created under `argocd` namespace, then argocd will not been able to deploy the `my-quarkus-hello` application. See the issue here: https://github.com/argoproj/argo-cd/issues/21150 and trick hereafter
+```bash
+echo "apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: my-quarkus-hello
+  namespace: argocd
+spec:
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  destinations:
+    - namespace: '*'
+      server: '*'
+  sourceRepos:
+    - '*'
+  sourceNamespaces:
+    - '*'" | kubectl apply -f -
+```
+
+Create a kind cluster using the tool [idpbuilder](https://cnoe.io/docs/intro/idpbuilder) and set the path to the Argo CD ConfigMap file you created using the flag `-c`
+```bash
+idpbuilder create \
+  --color \
+  --name quarkus \
+  --dev-password \
+  -c argocd:<PROJECT_PATH>/argocd-cm.yaml
+```
+- It could be needed to roll out the Argo CD pods to take care of the ConfigMap change
+```bash
+kubectl rollout restart -n argocd deployment argocd-server
+kubectl rollout restart -n argocd statefulset argocd-application-controller 
 ```
 
