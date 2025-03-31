@@ -1,3 +1,4 @@
 .idea/
 .env
 my-quarkus-hello
+.DS_Store
